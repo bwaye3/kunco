@@ -770,7 +770,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'kunco',
+  'database' => 'kunco2',
   'username' => 'root',
   'password' => 'root',
   'prefix' => '',
