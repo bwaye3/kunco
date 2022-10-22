@@ -105,6 +105,8 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       'style' => [],
       'enable_on_cart' => TRUE,
       'collect_billing_information' => FALSE,
+      'webhook_id' => '',
+      'enable_credit_card_icons' => TRUE,
     ] + parent::defaultConfiguration();
   }
 
@@ -172,6 +174,12 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       '#default_value' => $this->configuration['enable_on_cart'],
       '#states' => $spb_states,
     ];
+    $form['webhook_id'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Webhook ID'),
+      '#description' => $this->t('Required value when using Webhooks, used to verify the webhook signature.'),
+      '#default_value' => $this->configuration['webhook_id'],
+    ];
     $form['intent'] = [
       '#type' => 'radios',
       '#title' => $this->t('Transaction type'),
@@ -187,11 +195,13 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       '#description' => $this->t('The disabled funding sources for the transaction. Any funding sources passed do not display with Smart Payment Buttons. By default, funding source eligibility is smartly decided based on a variety of factors.'),
       '#type' => 'checkboxes',
       '#options' => [
-        'card' => $this->t('Credit or Debit Cards'),
+        'card' => $this->t('Credit or debit cards'),
+        'giropay' => $this->t('Giropay'),
+        'mybank' => $this->t('MyBank'),
         'credit' => $this->t('PayPal Credit'),
         'sepa' => $this->t('SEPA-Lastschrift'),
         'sofort' => $this->t('Sofort'),
-        'mybank' => $this->t('MyBank'),
+        'venmo' => $this->t('Venmo'),
       ],
       '#default_value' => $this->configuration['disable_funding'],
       '#states' => $spb_states,
@@ -236,6 +246,12 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       '#default_value' => $this->configuration['update_shipping_profile'],
       '#access' => $shipping_enabled,
       '#states' => $spb_states,
+    ];
+    $form['enable_credit_card_icons'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Credit Card Icons'),
+      '#description' => $this->t('Enabling this setting will display credit card icons in the payment section during checkout.'),
+      '#default_value' => $this->configuration['enable_credit_card_icons'],
     ];
     $form['customize_buttons'] = [
       '#type' => 'checkbox',
@@ -365,6 +381,8 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       'update_billing_profile',
       'update_shipping_profile',
       'enable_on_cart',
+      'webhook_id',
+      'enable_credit_card_icons',
     ];
 
     // Only save the style settings if the customize buttons checkbox is checked.
@@ -609,6 +627,136 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
   /**
    * {@inheritdoc}
    */
+  public function onNotify(Request $request) {
+    // Reacts to Webhook events.
+    $request_body = Json::decode($request->getContent());
+    $this->logger->debug('Incoming webhook request: <pre>@data</pre>', [
+      '@data' => print_r($request_body, TRUE),
+    ]);
+    $supported_events = [
+      'PAYMENT.AUTHORIZATION.VOIDED',
+      'PAYMENT.CAPTURE.COMPLETED',
+      'PAYMENT.CAPTURE.REFUNDED',
+      'PAYMENT.CAPTURE.PENDING',
+      'PAYMENT.CAPTURE.DENIED',
+    ];
+
+    // Ignore unsupported events.
+    if (!isset($request_body['event_type']) ||
+      !in_array($request_body['event_type'], $supported_events)) {
+      return;
+    }
+
+    try {
+      $sdk = $this->checkoutSdkFactory->get($this->configuration);
+      $parameters = [
+        'auth_algo' => $request->headers->get('PAYPAL-AUTH-ALGO'),
+        'cert_url' => $request->headers->get('PAYPAL-CERT-URL'),
+        'transmission_id' => $request->headers->get('PAYPAL-TRANSMISSION-ID'),
+        'transmission_sig' => $request->headers->get('PAYPAL-TRANSMISSION-SIG'),
+        'transmission_time' => $request->headers->get('PAYPAL-TRANSMISSION-TIME'),
+        'webhook_id' => $this->configuration['webhook_id'],
+        'webhook_event' => $request_body,
+      ];
+      $signature_request = $sdk->verifyWebhookSignature($parameters);
+      $response = Json::decode($signature_request->getBody());
+
+      // If the webhook signature could not be successfully verified, stop here.
+      if (strtolower($response['verification_status']) !== 'success') {
+        $this->logger->error('An error occurred while trying to verify the webhook signature: <pre>@response</pre>', [
+          '@response' => print_r($response, TRUE),
+        ]);
+        return;
+      }
+      // Unfortunately, we need to use the "custom_id" (i.e the order_id) for
+      // retrieving the payment associated to this webhook event since the
+      // resource id might differ from our "remote_id".
+      $order_id = $request_body['resource']['custom_id'];
+      /** @var \Drupal\commerce_payment\PaymentStorageInterface $payment_storage */
+      $payment_storage = $this->entityTypeManager->getStorage('commerce_payment');
+      // Note that we don't use the loadMultipleByOrder() method on the payment
+      // storage since we don't actually need to load the order.
+      // This assumes the last payment is the right one.
+      $payment_ids = $payment_storage->getQuery()
+        ->condition('order_id', $order_id)
+        ->accessCheck(FALSE)
+        ->sort('payment_id', 'DESC')
+        ->range(0, 1)
+        ->execute();
+
+      if (!$payment_ids) {
+        $this->logger->error('Could not find a payment transaction in Drupal for the order ID @order_id.', [
+          '@order_id' => $order_id,
+        ]);
+        return;
+      }
+      $payment = $payment_storage->load(reset($payment_ids));
+      $amount = Price::fromArray([
+        'number' => $request_body['resource']['amount']['value'],
+        'currency_code' => $request_body['resource']['amount']['currency_code'],
+      ]);
+      // Synchronize the remote ID and remote state.
+      $payment->setRemoteId($request_body['resource']['id']);
+      $payment->setRemoteState($request_body['resource']['status']);
+
+      switch ($request_body['event_type']) {
+        case 'PAYMENT.AUTHORIZATION.VOIDED':
+          if ($payment->getState()->getId() !== 'authorization_voided') {
+            $payment->setState('authorization_voided');
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.DENIED':
+          if ($payment->getState()->getId() !== 'authorization_voided') {
+            $payment->setState('capture_denied');
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.COMPLETED':
+          // Ignore completed payments.
+          if ($payment->getState()->getId() !== 'completed' ||
+            $amount->lessThan($payment->getAmount())) {
+            $payment->setAmount($amount);
+            $payment->setState('completed');
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.REFUNDED':
+          if ($amount->lessThan($payment->getAmount())) {
+            $payment->setState('partially_refunded');
+          }
+          else {
+            $payment->setState('refunded');
+          }
+          if (!$payment->getRefundedAmount() ||
+            !$payment->getRefundedAmount()->equals($amount)) {
+            $payment->setRefundedAmount($amount);
+            $payment->save();
+          }
+          break;
+
+        case 'PAYMENT.CAPTURE.PENDING':
+          if ($payment->getState()->getId() !== 'pending') {
+            $payment->setAmount($amount);
+            $payment->setState('pending');
+            $payment->save();
+          }
+          break;
+      }
+    }
+    catch (BadResponseException $exception) {
+      $this->logger->error('An error occurred while trying to verify the webhook signature: @error', [
+        '@error' => $exception->getMessage(),
+      ]);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onReturn(OrderInterface $order, Request $request) {
     try {
       $sdk = $this->checkoutSdkFactory->get($this->configuration);
@@ -621,9 +769,9 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
     $paypal_amount = $paypal_order['purchase_units'][0]['amount'];
     $paypal_total = Price::fromArray(['number' => $paypal_amount['value'], 'currency_code' => $paypal_amount['currency_code']]);
 
-    // Make sure the order total matches the total we get from PayPal.
-    if (!$paypal_total->equals($order->getTotalPrice())) {
-      throw new PaymentGatewayException('The PayPal order total does not match the order total.');
+    // Make sure the order balance matches the total we get from PayPal.
+    if (!$paypal_total->equals($order->getBalance())) {
+      throw new PaymentGatewayException('The PayPal order total does not match the order balance.');
     }
     if (!in_array($paypal_order['status'], ['APPROVED', 'SAVED'])) {
       throw new PaymentGatewayException(sprintf('Unexpected PayPal order status %s.', $paypal_order['status']));
@@ -633,6 +781,9 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       'remote_id' => $paypal_order['id'],
       'flow' => $flow,
       'intent' => strtolower($paypal_order['intent']),
+      // It's safe to assume the last funding source set in the cookie was for
+      // this order and note it in the data array for later use.
+      'funding_source' => $request->cookies->get('lastFundingSource', NULL),
     ]);
 
     if (empty($order->getEmail())) {
@@ -764,7 +915,7 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
         'partially_refunded' => 'partially_refunded',
       ],
     ];
-    return isset($mapping[$type][$remote_state]) ? $mapping[$type][$remote_state] : '';
+    return $mapping[$type][$remote_state] ?? '';
   }
 
   /**
@@ -795,7 +946,7 @@ class Checkout extends OffsitePaymentGatewayBase implements CheckoutInterface {
       if (!$shipments) {
         /** @var \Drupal\commerce_shipping\PackerManagerInterface $packer_manager */
         $packer_manager = \Drupal::service('commerce_shipping.packer_manager');
-        list($shipments) = $packer_manager->packToShipments($order, $this->buildCustomerProfile($order), $shipments);
+        [$shipments] = $packer_manager->packToShipments($order, $this->buildCustomerProfile($order), $shipments);
       }
       // Can't proceed without shipments.
       if (!$shipments) {

@@ -34,6 +34,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/thinkshout/mailchimp-api-php" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cweagans/composer-patches" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/harvesthq/chosen" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/commerceguys/addressing" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/commerceguys/intl" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sainsburys/guzzle-oauth2-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/firebase/php-jwt" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

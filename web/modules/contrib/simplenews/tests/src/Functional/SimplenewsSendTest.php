@@ -66,7 +66,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->assertCount(5, $mails, 'All mails were sent.');
     foreach ($mails as $mail) {
       $this->assertEqual($mail['subject'], '[Default newsletter] ' . $node->getTitle(), t('Mail has correct subject'));
-      $this->assertTrue(isset($this->subscribers[$mail['to']]), t('Found valid recipient'));
+      $this->assertArrayHasKey($mail['to'], $this->subscribers, t('Found valid recipient'));
       unset($this->subscribers[$mail['to']]);
     }
     $this->assertCount(0, $this->subscribers, 'all subscribers have been received a mail');
@@ -111,7 +111,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
 
     // Verify that the newsletter settings are shown.
     $this->drupalGet('node/add/simplenews_issue');
-    $this->assertText(t('Create Newsletter Issue'));
+    $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
     $edit = [
       'title[0][value]' => $this->randomString(10),
@@ -122,9 +122,9 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $node = Node::load($matches[1]);
 
     $this->clickLink(t('Newsletter'));
-    $this->assertText(t('Send'));
-    $this->assertText(t('Test'));
-    $this->assertNoText(t('Send newsletter when published'));
+    $this->assertSession()->pageTextContains('Send');
+    $this->assertSession()->pageTextContains('Test');
+    $this->assertSession()->pageTextNotContains('Send newsletter when published');
 
     // Verify state.
     $this->assertEquals(SIMPLENEWS_STATUS_SEND_NOT, $node->simplenews_issue->status, t('Newsletter not sent yet.'));
@@ -142,7 +142,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->assertCount(5, $mails, 'All mails were sent.');
     foreach ($mails as $mail) {
       $this->assertEqual($mail['subject'], '[Default newsletter] ' . $edit['title[0][value]'], t('Mail has correct subject'));
-      $this->assertTrue(isset($this->subscribers[$mail['to']]), t('Found valid recipient'));
+      $this->assertArrayHasKey($mail['to'], $this->subscribers, t('Found valid recipient'));
       unset($this->subscribers[$mail['to']]);
     }
     $this->assertCount(0, $this->subscribers, 'all subscribers have been received a mail');
@@ -163,7 +163,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $nodes = [];
     for ($i = 0; $i < 3; $i++) {
       $this->drupalGet('node/add/simplenews_issue');
-      $this->assertText(t('Create Newsletter Issue'));
+      $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
       $edit = [
         'title[0][value]' => $this->randomString(10),
@@ -191,7 +191,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
 
     // Verify that the newsletter settings are shown.
     $this->drupalGet('node/add/simplenews_issue');
-    $this->assertText(t('Create Newsletter Issue'));
+    $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
     $edit = [
       'title[0][value]' => $this->randomString(10),
@@ -202,8 +202,8 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $node = Node::load($matches[1]);
 
     $this->clickLink(t('Newsletter'));
-    $this->assertText(t('Send'));
-    $this->assertText(t('Test'));
+    $this->assertSession()->pageTextContains('Send');
+    $this->assertSession()->pageTextContains('Test');
 
     // Verify state.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache();
@@ -253,7 +253,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->assertCount(5, $mails, 'All mails were sent.');
     foreach ($mails as $mail) {
       $this->assertEqual($mail['subject'], '[Default newsletter] ' . $edit['title[0][value]'], t('Mail has correct subject'));
-      $this->assertTrue(isset($this->subscribers[$mail['to']]), t('Found valid recipient'));
+      $this->assertArrayHasKey($mail['to'], $this->subscribers, t('Found valid recipient'));
       unset($this->subscribers[$mail['to']]);
     }
     $this->assertCount(0, $this->subscribers, 'all subscribers have been received a mail');
@@ -267,7 +267,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
 
     // Verify that the newsletter settings are shown.
     $this->drupalGet('node/add/simplenews_issue');
-    $this->assertText(t('Create Newsletter Issue'));
+    $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
     $edit = [
       'title[0][value]' => $this->randomString(10),
@@ -285,8 +285,8 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $node = Node::load($matches[1]);
 
     $this->clickLink(t('Newsletter'));
-    $this->assertText(t('Send'));
-    $this->assertText(t('Test'));
+    $this->assertSession()->pageTextContains('Send');
+    $this->assertSession()->pageTextContains('Test');
 
     // Verify state.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache();
@@ -310,7 +310,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
 
     // Check warning message on node edit form.
     $this->clickLink(t('Edit'));
-    $this->assertText(t('This newsletter issue is currently being sent. Any changes will be reflected in the e-mails which have not been sent yet.'));
+    $this->assertSession()->pageTextContains('This newsletter issue is currently being sent. Any changes will be reflected in the e-mails which have not been sent yet.');
 
     // Run cron.
     simplenews_cron();
@@ -328,7 +328,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->assertCount(5, $mails, 'All mails were sent.');
     foreach ($mails as $mail) {
       $this->assertEqual($mail['subject'], '[Default newsletter] ' . $edit['title[0][value]'], t('Mail has correct subject'));
-      $this->assertTrue(isset($this->subscribers[$mail['to']]), t('Found valid recipient'));
+      $this->assertArrayHasKey($mail['to'], $this->subscribers, t('Found valid recipient'));
       unset($this->subscribers[$mail['to']]);
     }
     $this->assertCount(0, $this->subscribers, 'all subscribers have been received a mail');
@@ -345,7 +345,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
 
     // Verify that the newsletter settings are shown.
     $this->drupalGet('node/add/simplenews_issue');
-    $this->assertText(t('Create Newsletter Issue'));
+    $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
     $edit = [
       'title[0][value]' => $this->randomString(10),
@@ -357,8 +357,8 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $node = Node::load($matches[1]);
 
     $this->clickLink(t('Newsletter'));
-    $this->assertText(t('Send'));
-    $this->assertText(t('Test'));
+    $this->assertSession()->pageTextContains('Send');
+    $this->assertSession()->pageTextContains('Test');
 
     // Verify state.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache();
@@ -390,7 +390,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->assertCount(5, $mails, 'All mails were sent.');
     foreach ($mails as $mail) {
       $this->assertEqual($mail['subject'], '[Default newsletter] ' . $edit['title[0][value]'], t('Mail has correct subject'));
-      $this->assertTrue(isset($this->subscribers[$mail['to']]), t('Found valid recipient'));
+      $this->assertArrayHasKey($mail['to'], $this->subscribers, t('Found valid recipient'));
       unset($this->subscribers[$mail['to']]);
     }
     $this->assertCount(0, $this->subscribers, 'all subscribers have been received a mail');
@@ -412,10 +412,10 @@ class SimplenewsSendTest extends SimplenewsTestBase {
       'description' => $this->randomString(20),
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText(t('Newsletter @name has been added', ['@name' => $edit['name']]));
+    $this->assertSession()->pageTextContains('Newsletter ' . $edit['name'] . ' has been added');
 
     $this->drupalGet('node/add/simplenews_issue');
-    $this->assertText(t('Create Newsletter Issue'));
+    $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
     $first_newsletter_id = $this->getRandomNewsletter();
 
@@ -479,7 +479,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     // Check the status on the newsletter tab.  The pending mail should be
     // retried.
     $this->drupalGet('node/1/simplenews');
-    $this->assertText('Newsletter issue is pending, 0 mails sent out of 5, 1 errors.');
+    $this->assertSession()->pageTextContains('Newsletter issue is pending, 0 mails sent out of 5, 1 errors.');
 
     // Allow one mail to succeed, and the pending mail should be treated as an
     // error.
@@ -491,7 +491,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->container->get('state')->set('simplenews.test_result_alter', $results_alter);
     simplenews_cron();
     $this->drupalGet('node/1/simplenews');
-    $this->assertText('Newsletter issue sent to 2 subscribers, 3 errors.');
+    $this->assertSession()->pageTextContains('Newsletter issue sent to 2 subscribers, 3 errors.');
   }
 
   /**
@@ -500,7 +500,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
   public function testDelete() {
     // Verify that the newsletter settings are shown.
     $this->drupalGet('node/add/simplenews_issue');
-    $this->assertText(t('Create Newsletter Issue'));
+    $this->assertSession()->pageTextContains('Create Newsletter Issue');
 
     // Prevent deleting the mail spool entries automatically.
     $config = $this->config('simplenews.settings');
@@ -516,8 +516,8 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $node = Node::load($matches[1]);
 
     $this->clickLink(t('Newsletter'));
-    $this->assertText(t('Send'));
-    $this->assertText(t('Test'));
+    $this->assertSession()->pageTextContains('Send');
+    $this->assertSession()->pageTextContains('Test');
 
     // Verify state.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache();
@@ -537,7 +537,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
 
     // Verify that deleting isn't possible right now.
     $this->clickLink(t('Edit'));
-    $this->assertNoText(t('Delete'));
+    $this->assertSession()->pageTextNotContains('Delete');
 
     // Send mails.
     simplenews_cron();
@@ -555,7 +555,7 @@ class SimplenewsSendTest extends SimplenewsTestBase {
     $this->assertCount(5, $mails, 'All mails were sent.');
     foreach ($mails as $mail) {
       $this->assertEqual($mail['subject'], '[Default newsletter] ' . $edit['title[0][value]'], t('Mail has correct subject'));
-      $this->assertTrue(isset($this->subscribers[$mail['to']]), t('Found valid recipient'));
+      $this->assertArrayHasKey($mail['to'], $this->subscribers, t('Found valid recipient'));
       unset($this->subscribers[$mail['to']]);
     }
     $this->assertCount(0, $this->subscribers, 'all subscribers have received a mail');

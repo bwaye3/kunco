@@ -55,7 +55,7 @@ class SimplenewsPersonalizationFormsTest extends SimplenewsTestBase {
 
     // Assert fields are updated.
     $this->drupalGet("user/$uid");
-    $this->assertText(Html::escape($new_value));
+    $this->assertSession()->pageTextContains($new_value);
 
     // Assert subscription remains unconfirmed.
     $subscriber = $this->getLatestSubscriber();
@@ -82,7 +82,7 @@ class SimplenewsPersonalizationFormsTest extends SimplenewsTestBase {
     // Assert fields are updated.
     $this->resetPassLogin($user);
     $this->drupalGet("user/$uid");
-    $this->assertText(Html::escape($new_value));
+    $this->assertSession()->pageTextContains($new_value);
   }
 
   /**
@@ -111,7 +111,14 @@ class SimplenewsPersonalizationFormsTest extends SimplenewsTestBase {
     // Disable account.
     $this->drupalLogin($this->admin);
     $this->drupalGet("user/$uid/cancel");
-    $this->submitForm([], 'Cancel account');
+    // @todo Remove version_compare() condition when Drupal 9.3.0 becomes the
+    // lowest-supported version of core.
+    if (version_compare(\Drupal::VERSION, '9.3', '>=')) {
+      $this->submitForm([], 'Confirm');
+    }
+    else {
+      $this->submitForm([], 'Cancel account');
+    }
 
     // Assert subscriber is inactive.
     $subscriber = $this->getLatestSubscriber();
@@ -133,7 +140,14 @@ class SimplenewsPersonalizationFormsTest extends SimplenewsTestBase {
     // Delete account.
     $this->drupalLogin($this->admin);
     $this->drupalGet("user/$uid/cancel");
-    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
+    // @todo Remove version_compare() condition when Drupal 9.3.0 becomes the
+    // lowest-supported version of core.
+    if (version_compare(\Drupal::VERSION, '9.3', '>=')) {
+      $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Confirm');
+    }
+    else {
+      $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
+    }
 
     // Assert subscriptions are deleted.
     $subscriber = $this->getLatestSubscriber();
@@ -157,7 +171,7 @@ class SimplenewsPersonalizationFormsTest extends SimplenewsTestBase {
 
     // Attempt subscribe and assert "blocked" message.
     $this->subscribe('default', $email);
-    $this->assertRaw(t('The email address %mail belongs to a blocked user.', ['%mail' => $email]));
+    $this->assertSession()->responseContains("The email address <em class=\"placeholder\">$email</em> belongs to a blocked user.");
   }
 
 }
