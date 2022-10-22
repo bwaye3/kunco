@@ -5,50 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3448e03d-81fc-451f-8ed9-18c7c27d48fc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Feeds/Target/Address.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Feeds/Target/AddressCountry.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Feeds/Target/AddressZone.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.install" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.libraries.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.links.menu.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.links.task.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.routing.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.services.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/config/install/block_class.settings.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/css/block-class.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/images/example-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/images/example-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/js/block-class.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Constants/BlockClassConstants.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Controller/BlockClassController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Form/BlockClassBulkOperationsForm.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Form/BlockClassConfirmBulkOperationForm.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Form/BlockClassConfirmDeletionAttributeForm.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Form/BlockClassConfirmDeletionForm.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Form/BlockClassSettingsForm.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/src/Service/BlockClassHelperService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.json" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/address.info.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/address.info.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/ludwig.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/ludwig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/src/Plugin/Field/FieldType/AddressItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Plugin/Field/FieldType/AddressItem.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/src/Plugin/Validation/Constraint/AddressFormatConstraintValidator.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Plugin/Validation/Constraint/AddressFormatConstraintValidator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/src/Repository/AddressFormatRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Repository/AddressFormatRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/src/Repository/CountryRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Repository/CountryRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/src/Repository/SubdivisionRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/src/Repository/SubdivisionRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/address/tests/modules/address_test/address_test.info.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/address/tests/modules/address_test/address_test.info.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_class/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.info.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.info.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.module" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/block_class.module" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_class/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_class/config/schema/block_class.schema.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/config/schema/block_class.schema.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_class/tests/src/Functional/BlockClassTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/block_class/tests/src/Functional/BlockClassTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/modules/contrib/block_visibility_groups/block_visibility_groups.permissions.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/modules/contrib/block_visibility_groups/block_visibility_groups.permissions.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,6 +122,9 @@
       <path value="$PROJECT_DIR$/vendor/cweagans/composer-patches" />
       <path value="$PROJECT_DIR$/vendor/harvesthq/chosen" />
       <path value="$PROJECT_DIR$/vendor/commerceguys/addressing" />
+      <path value="$PROJECT_DIR$/vendor/commerceguys/intl" />
+      <path value="$PROJECT_DIR$/vendor/sainsburys/guzzle-oauth2-plugin" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="ProjectId" id="2GPPD9iJWTjMEBB6lR5Am9yemVx" />
