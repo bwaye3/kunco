@@ -98,6 +98,7 @@
       <path value="$PROJECT_DIR$/vendor/commerceguys/intl" />
       <path value="$PROJECT_DIR$/vendor/sainsburys/guzzle-oauth2-plugin" />
       <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/stripe/stripe-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">

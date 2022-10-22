@@ -89,6 +89,7 @@ class ComposerStaticInit1ca02a844b8d12612a2aa2a04074ccd1
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Cmf\\Component\\Routing\\' => 30,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
+            'Stripe\\' => 7,
             'SelfUpdate\\' => 11,
             'Sainsburys\\Guzzle\\Oauth2\\' => 25,
         ),
@@ -320,6 +321,10 @@ class ComposerStaticInit1ca02a844b8d12612a2aa2a04074ccd1
         'Symfony\\Bridge\\PsrHttpMessage\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/psr-http-message-bridge',
+        ),
+        'Stripe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
         'SelfUpdate\\' => 
         array (

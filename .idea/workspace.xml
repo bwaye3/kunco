@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3448e03d-81fc-451f-8ed9-18c7c27d48fc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/sites/default/settings.php" beforeDir="false" afterPath="$PROJECT_DIR$/web/sites/default/settings.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,6 +125,7 @@
       <path value="$PROJECT_DIR$/vendor/commerceguys/intl" />
       <path value="$PROJECT_DIR$/vendor/sainsburys/guzzle-oauth2-plugin" />
       <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/stripe/stripe-php" />
     </include_path>
   </component>
   <component name="ProjectId" id="2GPPD9iJWTjMEBB6lR5Am9yemVx" />
@@ -175,6 +176,7 @@
       <workItem from="1666287125105" duration="3162000" />
       <workItem from="1666449347351" duration="1627000" />
       <workItem from="1666450997260" duration="2185000" />
+      <workItem from="1666458671729" duration="359000" />
     </task>
     <servers />
   </component>

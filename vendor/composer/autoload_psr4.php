@@ -42,6 +42,7 @@ return array(
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Symfony\\Cmf\\Component\\Routing\\' => array($vendorDir . '/symfony-cmf/routing/src'),
     'Symfony\\Bridge\\PsrHttpMessage\\' => array($vendorDir . '/symfony/psr-http-message-bridge'),
+    'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
     'SelfUpdate\\' => array($vendorDir . '/consolidation/self-update/src'),
     'Sainsburys\\Guzzle\\Oauth2\\' => array($vendorDir . '/sainsburys/guzzle-oauth2-plugin/src'),
     'Robo\\' => array($vendorDir . '/consolidation/robo/src'),

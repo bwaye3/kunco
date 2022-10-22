@@ -27,6 +27,7 @@
         "drupal/chosen": "^3.0",
         "drupal/commerce": "^2.32",
         "drupal/commerce_paypal": "^1.1",
+        "drupal/commerce_stripe": "^1.0@RC",
         "drupal/core-composer-scaffold": "^9.4",
         "drupal/core-project-message": "^9.4",
         "drupal/core-recommended": "^9.4",

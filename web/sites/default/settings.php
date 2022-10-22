@@ -1,6 +1,6 @@
 <?php
 $databases['default']['default'] = array (
-    'database' => 'kunco2',
+    'database' => 'kunco',
     'username' => 'root',
     'password' => 'root',
     'prefix' => '',
